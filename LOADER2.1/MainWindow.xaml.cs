@@ -173,6 +173,10 @@ namespace LOADER2._1
             {
                 Window Upload_project = new Upload_project();
                 Upload_project.Show();
+                Upload_project.Closed += (s, args) =>
+                {
+                    this.Window_Loaded(sender, e); // Вызываем метод Window_Loaded после закрытия окна setting
+                };
             }
             else if (result == MessageBoxResult.No)
             {

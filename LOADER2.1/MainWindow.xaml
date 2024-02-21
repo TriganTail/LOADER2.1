@@ -1,0 +1,78 @@
+﻿<Window x:Class="LOADER2._1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="LOADER 2.0" Height="801" Width="794" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="47.62"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto" MinHeight="150"/>
+            <!-- Добавленная строка для кнопок -->
+        </Grid.RowDefinitions>
+
+        <!-- Поле поиска с вспомогательным текстом -->
+        <TextBox x:Name="searchTextBox" Grid.Row="0" Margin="47,10,10,10" BorderBrush="DarkGray" BorderThickness="1" Padding="5" TextChanged="searchTextBox_TextChanged" ToolTip="Поиск-запрос по проектам в облаке (ищется по буквам, а не по словам)">
+
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Text" Value=""/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="10,10,10,10">
+            <Button Margin="5" Padding="10" Background="{x:Null}" Foreground="White" FontSize="14" BorderBrush="{x:Null}" Height="100" Width="100" AutomationProperties.HelpText="Сгрузить" Click="Button_Click_1" ToolTip="Выгрузить проект на сервер">
+                <Image HorizontalAlignment="Center" Width="64" Source="/icons8-upload-100.png" Height="60"/>
+            </Button>
+            <Button Margin="5" Padding="10" Background="{x:Null}" Foreground="White" FontSize="14" Height="100" Width="100" Click="Button_Click_2" BorderBrush="{x:Null}" ToolTip="Скачать проект с сервера">
+                <Image HorizontalAlignment="Center" Width="57" Source="/icons8-download-100.png" Height="62" AutomationProperties.HelpText="Скачать"/>
+            </Button>
+            <Button Padding="10" Background="{x:Null}" Foreground="White" FontSize="14" Width="100" Height="100" AutomationProperties.HelpText="Настройки" Click="Button_Click" BorderBrush="{x:Null}" ToolTip="Настройки" VerticalAlignment="Center" HorizontalAlignment="Right" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Center" FlowDirection="RightToLeft" UseLayoutRounding="False">
+                <Image HorizontalAlignment="Center" Width="62" Source="/icons8-setting-500.png" RenderTransformOrigin="0.464,0.459" Height="66"/>
+            </Button>
+        </StackPanel>
+
+        <!-- Чекбоксы -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,10,10,10" ToolTip="Сортировка проектов">
+            <CheckBox x:Name="alphabeticalCheckBox" Content="А-Я" Margin="5" FontSize="14" Checked="AlphabeticalCheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+            <CheckBox x:Name="dateCheckBox" Content="Дата" Margin="5" FontSize="14" Checked="DateCheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+        </StackPanel>
+
+
+
+
+        <!-- Лист с данными -->
+        <ListView Grid.Row="3" x:Name="dataListView" Margin="10,10,10,10" SelectionMode="Single" BorderBrush="DarkGray" BorderThickness="1">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" Foreground="Black" FontSize="14"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Image HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="33" Margin="10,8,0,0" Source="/icons8-search-480.png">
+            <Image.OpacityMask>
+                <ImageBrush ImageSource="/icons8-search-480.png"/>
+            </Image.OpacityMask>
+        </Image>
+    </Grid>
+</Window>

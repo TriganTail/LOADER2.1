@@ -203,9 +203,12 @@ namespace LOADER2._1
         {
             try
             {
+                int totalFiles = dataListView.SelectedItems.Count;
+                int copiedFiles = 0;
+
                 foreach (var selectedItem in dataListView.SelectedItems)
                 {
-                    string selectedItemName = selectedItem.ToString(); // Получаем текст элемента ListView
+                    string selectedItemName = selectedItem.ToString(); 
                     string sourcePath = Path.Combine(settings.SourceFolder, selectedItemName);
                     string destinationPath = Path.Combine(settings.DestinationFolder, selectedItemName);
 
@@ -218,17 +221,12 @@ namespace LOADER2._1
                             destinationPath = Path.Combine(settings.DestinationFolder, newFolderName);
                             Directory.CreateDirectory(destinationPath);
                         }
-
-                        destinationPath = Path.Combine(destinationPath, Path.GetFileName(sourcePath)); // Добавляем имя файла к пути назначения
-
+                        destinationPath = Path.Combine(destinationPath, Path.GetFileName(sourcePath));
                         if (File.Exists(destinationPath))
                         {
                             File.Delete(destinationPath);
                         }
-
                         File.Copy(sourcePath, destinationPath);
-
-                        // Копируем связанную папку
                         string relatedFolderName = selectedItemName.Replace(".p2dx", ".p2dxdat");
                         string relatedFolderPath = Path.Combine(settings.SourceFolder, relatedFolderName);
                         string destinationFolderPath = Path.Combine(settings.DestinationFolder, newFolderName, relatedFolderName);
@@ -240,15 +238,24 @@ namespace LOADER2._1
                     }
                     else if (Directory.Exists(sourcePath))
                     {
-                        DirectoryCopy(sourcePath, destinationPath, true); // Копируем всю папку, включая все подпапки и файлы
+                        DirectoryCopy(sourcePath, destinationPath, true); 
                     }
+
+
+                    copiedFiles++;
+
+
+                    double progressPercentage = ((double)copiedFiles / totalFiles) * 100;
+                    Loading.Value = (int)progressPercentage;
                 }
 
-                MessageBox.Show("Files copied successfully!");
+                MessageBox.Show("Копирование выполнено!");
+                Loading.Value = 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"Есть проблема: {ex.Message}");
+                Loading.Value = 0;
             }
         }
 
@@ -256,24 +263,19 @@ namespace LOADER2._1
         {
             try
             {
-
                 if (File.Exists(sourceDirName))
                 {
-
                     string destFileName = Path.Combine(destDirName, Path.GetFileName(sourceDirName));
                     File.Copy(sourceDirName, destFileName);
                     return;
                 }
-
                 if (!Directory.Exists(destDirName))
                 {
                     Directory.CreateDirectory(destDirName);
                 }
-
                 DirectoryInfo dir = new DirectoryInfo(sourceDirName);
                 FileInfo[] files = dir.GetFiles();
                 DirectoryInfo[] dirs = dir.GetDirectories();
-
                 foreach (FileInfo file in files)
                 {
                     string temppath = Path.Combine(destDirName, file.Name);
@@ -293,10 +295,6 @@ namespace LOADER2._1
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
-
-
-
-
 
     }
 }

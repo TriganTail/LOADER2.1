@@ -1,7 +1,7 @@
 ﻿<Window x:Class="LOADER2._1.setting"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Настройки" Height="548" Width="818">
+        Title="Настройки" Height="548" Width="818" Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="0,0,5,0"/>
@@ -80,7 +80,7 @@
             </Image>
         </Button>
 
-        <CheckBox x:Name="CreateNewFolder" Grid.Row="4" Content="Скачивать каждый проект в отдельную папку" Margin="10,0,10,0" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="15" Checked="CreateNewFolder_Checked"/>
+        <CheckBox x:Name="CreateNewFolder" Grid.Row="4" Content="Скачивать каждый проект в отдельную папку" Margin="10,0,10,0" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="15" Checked="CreateNewFolder_Checked" IsChecked="False"/>
         <CheckBox x:Name="ReplaceFolder" Grid.Row="5" Content="Перезаписывать данные в папке назначения" Margin="10,0,10,0" VerticalAlignment="Center" Grid.ColumnSpan="2" Height="15" Checked="ReplaceFolder_Checked"/>
         <Button x:Name="BtnSave" Grid.Row="6" Margin="647,18,21,19" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" ToolTip="Сохранить настройки" Click="BtnSave_Click">
             <Image HorizontalAlignment="Center" Height="106" VerticalAlignment="Center" Width="128" Source="/diskette.png">

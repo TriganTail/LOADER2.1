@@ -79,10 +79,8 @@ namespace LOADER2._1
         {
             try
             {
-
                 if (File.Exists(sourceDirName))
                 {
-
                     string destFileName = Path.Combine(destDirName, Path.GetFileName(sourceDirName));
                     File.Copy(sourceDirName, destFileName);
                     return;
@@ -97,11 +95,22 @@ namespace LOADER2._1
                 FileInfo[] files = dir.GetFiles();
                 DirectoryInfo[] dirs = dir.GetDirectories();
 
+                int totalFiles = files.Length;
+                int copiedFiles = 0;
+
                 foreach (FileInfo file in files)
                 {
                     string temppath = Path.Combine(destDirName, file.Name);
                     file.CopyTo(temppath, false);
+
+                    // После копирования каждого файла, увеличиваем счетчик скопированных файлов
+                    copiedFiles++;
+
+                    // Вычисляем текущий процент выполнения и обновляем ProgressBar
+                    double progressPercentage = ((double)copiedFiles / totalFiles) * 100;
+                    Loading.Value = (int)progressPercentage;
                 }
+
                 if (copySubDirs)
                 {
                     foreach (DirectoryInfo subdir in dirs)
@@ -116,6 +125,7 @@ namespace LOADER2._1
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
 
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using LOADER2._1.Properties;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -8,9 +9,20 @@ namespace LOADER2._1
 {
     public partial class setting : Window
     {
+        private Settings settings;
+
         public setting()
         {
             InitializeComponent();
+        }
+
+        private class Settings
+        {
+            public string SourceFolder { get; set; }
+            public string DestinationFolder { get; set; }
+            public bool CreateNewFolder { get; set; }
+            public bool ReplaceFolder { get; set; }
+
         }
 
         private void OnSourceFolderButtonClick(object sender, RoutedEventArgs e)
@@ -89,6 +101,39 @@ namespace LOADER2._1
         {
             if (ReplaceFolder.IsChecked == true)
             {
+                CreateNewFolder.IsChecked = false;
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
+
+            if (!File.Exists(settingsFilePath))
+            {
+                MessageBox.Show("Файл settings.json не найден.");
+                return;
+            }
+
+            // Чтение данных из setting.json
+            string json = File.ReadAllText(settingsFilePath);
+            settings = JsonConvert.DeserializeObject<Settings>(json);
+
+            if (settings == null)
+            {
+                MessageBox.Show("Не удалось прочитать настройки из файла settings.json.");
+                return;
+            }
+            txtBoxSourceFolder.Text = settings.SourceFolder;
+            txtBoxDestinationFolder.Text = settings.DestinationFolder;
+            if (settings.CreateNewFolder)
+            {
+                CreateNewFolder.IsChecked = true;
+                ReplaceFolder.IsChecked = false;
+            }
+            else
+            {
+                ReplaceFolder.IsChecked = true;
                 CreateNewFolder.IsChecked = false;
             }
         }

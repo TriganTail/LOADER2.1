@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LOADER2.1.exe" size="398832">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LOADER2.1.exe" size="400368">
       <assemblyIdentity name="LOADER2.1" version="1.0.1.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rLW6bYI9EGf9+SaAx+o66zxM4NDkiALpRUerInszuRY=</dsig:DigestValue>
+        <dsig:DigestValue>N4kiaoe0WsD+MKkyAIXwm4I+lJvvqFgdVzdFOA97riw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

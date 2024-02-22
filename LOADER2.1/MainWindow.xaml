@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LOADER 2.0" Height="801" Width="794" Loaded="Window_Loaded">
+        Title="LOADER 2.0 (beta: build 22.02.2024 16:50)" Height="801" Width="794" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -43,6 +43,7 @@
             <Button Padding="10" Background="{x:Null}" Foreground="White" FontSize="14" Width="100" Height="100" AutomationProperties.HelpText="Настройки" Click="Button_Click" BorderBrush="{x:Null}" ToolTip="Настройки" VerticalAlignment="Center" HorizontalAlignment="Right" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" VerticalContentAlignment="Center" FlowDirection="RightToLeft" UseLayoutRounding="False">
                 <Image HorizontalAlignment="Center" Width="62" Source="/icons8-setting-500.png" RenderTransformOrigin="0.464,0.459" Height="66"/>
             </Button>
+            <ProgressBar x:Name="Loading" Height="40" Width="428" Foreground="#FF444444" BorderBrush="#FFBDBDBD" Background="#FFF9F9F9" Panel.ZIndex="50" Margin="10,0,10,0"/>
         </StackPanel>
 
         <!-- Чекбоксы -->

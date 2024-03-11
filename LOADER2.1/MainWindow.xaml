@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="LOADER 2.0 (beta: build 22.02.2024 16:50)" Height="801" Width="794" Loaded="Window_Loaded">
+        Title="LOADER 2.0 (beta: build 11.03.2024 16:50)" Height="801" Width="794" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Поле поиска с вспомогательным текстом -->
-        <TextBox x:Name="searchTextBox" Grid.Row="0" Margin="47,10,10,10" BorderBrush="DarkGray" BorderThickness="1" Padding="5" TextChanged="searchTextBox_TextChanged" ToolTip="Поиск-запрос по проектам в облаке (ищется по буквам, а не по словам)">
+        <TextBox x:Name="searchTextBox" Grid.Row="0" Margin="47,10,10,10" BorderBrush="DarkGray" BorderThickness="1" Padding="5" TextChanged="searchTextBox_TextChanged" ToolTip="Поиск-запрос по проектам в облаке (ищется по буквам, а не по словам)" KeyUp="searchTextBox_KeyUp">
 
             <TextBox.Style>
                 <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">

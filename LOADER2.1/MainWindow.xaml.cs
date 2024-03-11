@@ -106,7 +106,7 @@ namespace LOADER2._1
             if (string.IsNullOrEmpty(searchText))
             {
                 // Если строка поиска пустая, сбрасываем фильтрацию и отображаем все элементы
-                view.Filter = null;
+                //view.Filter = null;
             }
             else
             {
@@ -296,5 +296,16 @@ namespace LOADER2._1
             }
         }
 
+        private void searchTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            string searchText = searchTextBox.Text.ToLower();
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(dataListView.ItemsSource);
+            if (string.IsNullOrEmpty(searchText))
+            {
+                // Если строка поиска пустая, сбрасываем фильтрацию и отображаем все элементы
+                view.Filter = null;
+            }
+        }
     }
 }

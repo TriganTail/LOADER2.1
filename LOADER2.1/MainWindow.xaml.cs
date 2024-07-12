@@ -203,18 +203,20 @@ namespace LOADER2._1
         {
             try
             {
+                string newFolderName = "";
                 int totalFiles = dataListView.SelectedItems.Count;
                 int copiedFiles = 0;
 
                 foreach (var selectedItem in dataListView.SelectedItems)
                 {
-                    string selectedItemName = selectedItem.ToString(); 
+                    string selectedItemName = selectedItem.ToString();
                     string sourcePath = Path.Combine(settings.SourceFolder, selectedItemName);
                     string destinationPath = Path.Combine(settings.DestinationFolder, selectedItemName);
+                    
 
                     if (File.Exists(sourcePath))
                     {
-                        string newFolderName = "";
+                        
                         if (createNewFolder)
                         {
                             newFolderName = Path.GetFileNameWithoutExtension(selectedItemName) + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -238,12 +240,10 @@ namespace LOADER2._1
                     }
                     else if (Directory.Exists(sourcePath))
                     {
-                        DirectoryCopy(sourcePath, destinationPath, true); 
+                        DirectoryCopy(sourcePath, destinationPath, true);
                     }
 
-
                     copiedFiles++;
-
 
                     double progressPercentage = ((double)copiedFiles / totalFiles) * 100;
                     Loading.Value = (int)progressPercentage;
@@ -251,6 +251,13 @@ namespace LOADER2._1
 
                 MessageBox.Show("Копирование выполнено!");
                 Loading.Value = 0;
+
+                // Добавляем диалоговое окно
+                MessageBoxResult result = MessageBox.Show("Хотите открыть папку назначения?", "Открыть папку", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Process.Start("explorer.exe", settings.DestinationFolder + "\\" + newFolderName);
+                }
             }
             catch (Exception ex)
             {
@@ -258,6 +265,7 @@ namespace LOADER2._1
                 Loading.Value = 0;
             }
         }
+
 
         private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {

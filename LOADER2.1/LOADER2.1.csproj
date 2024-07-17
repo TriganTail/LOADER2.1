@@ -152,6 +152,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="update.png" />
     <Resource Include="icons8-setting-500.png" />
     <Resource Include="icons8-upload-100.png" />
     <Resource Include="icons8-download-100.png" />

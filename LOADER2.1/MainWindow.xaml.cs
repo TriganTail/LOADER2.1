@@ -7,6 +7,10 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 
 
 namespace LOADER2._1
@@ -18,6 +22,12 @@ namespace LOADER2._1
         private string destinationFolder;
         private bool createNewFolder;
         private bool replaceFolder;
+        private Button draggableButton;
+        private bool isDragging = false;
+        private Point clickPosition;
+        private Canvas mainCanvas;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,27 +43,28 @@ namespace LOADER2._1
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Поиск файла setting.json
+            
+            mainCanvas = new Canvas();
+            mainCanvas.HorizontalAlignment = HorizontalAlignment.Stretch;
+            mainCanvas.VerticalAlignment = VerticalAlignment.Stretch;
+            Panel.SetZIndex(mainCanvas, -1); 
+            (this.Content as Grid).Children.Add(mainCanvas);
+
             string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
 
             if (File.Exists(settingsFilePath))
             {
-                // Чтение данных из setting.json
                 string json = File.ReadAllText(settingsFilePath);
                 settings = JsonConvert.DeserializeObject<Settings>(json);
 
                 if (settings != null)
                 {
-                    // Установка пути из настроек
                     folderPath = settings.SourceFolder;
                     destinationFolder = settings.DestinationFolder;
                     createNewFolder = settings.CreateNewFolder;
                     replaceFolder = settings.ReplaceFolder;
 
-                    // Получаем список файлов
                     List<string> filesList = FindP2DXFiles(folderPath);
-
-                    // Привязка списка файлов к источнику данных ListView
                     dataListView.ItemsSource = filesList;
                 }
                 else
@@ -63,20 +74,102 @@ namespace LOADER2._1
             }
             else
             {
-                // Открытие окна настроек, если файл setting.json не найден
                 setting setting = new setting();
                 setting.Show();
                 setting.Closed += (s, args) =>
                 {
-                    this.Window_Loaded(sender, e); // Вызываем метод Window_Loaded после закрытия окна setting
+                    this.Window_Loaded(sender, e);
                 };
                 return;
             }
+
+            AddDraggableButton(); 
         }
+
+
+        private void AddDraggableButton()
+        {
+            
+            draggableButton = new Button
+            {
+                Width = 65,
+                Height = 65,
+                Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/update.png")))
+            };
+
+            
+            Canvas.SetLeft(draggableButton, 703 );
+            Canvas.SetTop(draggableButton, 42);
+
+            
+            draggableButton.MouseLeftButtonDown += DraggableButton_MouseLeftButtonDown;
+            draggableButton.MouseLeftButtonUp += DraggableButton_MouseLeftButtonUp;
+            draggableButton.MouseMove += DraggableButton_MouseMove;
+            draggableButton.Click += DraggableButton_Click;
+
+            
+            mainCanvas.Children.Add(draggableButton);
+        }
+
+
+        private void DraggableButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+            clickPosition = e.GetPosition(mainCanvas);
+            draggableButton.CaptureMouse();
+        }
+
+        private void DraggableButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = false;
+            draggableButton.ReleaseMouseCapture();
+        }
+
+        private void DraggableButton_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                var mousePos = e.GetPosition(mainCanvas);
+                var offset = mousePos - clickPosition;
+
+                var newLeft = Canvas.GetLeft(draggableButton) + offset.X;
+                var newTop = Canvas.GetTop(draggableButton) + offset.Y;
+
+                
+                if (newLeft < 0) newLeft = 0;
+                if (newTop < 0) newTop = 0;
+                if (newLeft + draggableButton.Width > mainCanvas.ActualWidth) newLeft = mainCanvas.ActualWidth - draggableButton.Width;
+                if (newTop + draggableButton.Height > mainCanvas.ActualHeight) newTop = mainCanvas.ActualHeight - draggableButton.Height;
+
+                Canvas.SetLeft(draggableButton, newLeft);
+                Canvas.SetTop(draggableButton, newTop);
+
+                clickPosition = mousePos;
+            }
+        }
+
+        private void DraggableButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateFileList();
+        }
+
+        private void UpdateFileList()
+        {
+            if (settings != null)
+            {
+                List<string> filesList = FindP2DXFiles(folderPath);
+                dataListView.ItemsSource = filesList;
+            }
+            else
+            {
+                MessageBox.Show("Settings not loaded.");
+            }
+        }
+
 
         private List<string> FindP2DXFiles(string folderPath)
         {
-            var filesList = new List<string>(); // Переименовываем переменную
+            var filesList = new List<string>(); 
 
             if (Directory.Exists(folderPath))
             {
@@ -84,7 +177,7 @@ namespace LOADER2._1
 
                 foreach (string file in files)
                 {
-                    filesList.Add(Path.GetFileName(file)); // Используем новое имя переменной
+                    filesList.Add(Path.GetFileName(file)); 
                 }
             }
             else
@@ -92,7 +185,7 @@ namespace LOADER2._1
                 MessageBox.Show("Путь к папке не существует.");
             }
 
-            return filesList; // Используем новое имя переменной
+            return filesList; 
         }
 
 
@@ -105,12 +198,11 @@ namespace LOADER2._1
 
             if (string.IsNullOrEmpty(searchText))
             {
-                // Если строка поиска пустая, сбрасываем фильтрацию и отображаем все элементы
-                //view.Filter = null;
+
             }
             else
             {
-                // Применяем фильтр к элементам в ListView
+               
                 view.Filter = item => ((string)item).ToLower().Contains(searchText);
             }
         }
@@ -156,10 +248,10 @@ namespace LOADER2._1
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             setting setting = new setting();
-            setting.Show(); // Отобразить окно setting
+            setting.Show(); 
             setting.Closed += (s, args) =>
             {
-                this.Window_Loaded(sender, e); // Вызываем метод Window_Loaded после закрытия окна setting
+                this.Window_Loaded(sender, e);
             };
         }
 
@@ -175,7 +267,7 @@ namespace LOADER2._1
                 Upload_project.Show();
                 Upload_project.Closed += (s, args) =>
                 {
-                    this.Window_Loaded(sender, e); // Вызываем метод Window_Loaded после закрытия окна setting
+                    this.Window_Loaded(sender, e); 
                 };
             }
             else if (result == MessageBoxResult.No)
@@ -252,7 +344,7 @@ namespace LOADER2._1
                 MessageBox.Show("Копирование выполнено!");
                 Loading.Value = 0;
 
-                // Добавляем диалоговое окно
+                
                 MessageBoxResult result = MessageBox.Show("Хотите открыть папку назначения?", "Открыть папку", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
@@ -300,7 +392,7 @@ namespace LOADER2._1
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred: {ex.Message}");
+                MessageBox.Show($"Есть проблема: {ex.Message}");
             }
         }
 
@@ -311,7 +403,6 @@ namespace LOADER2._1
             ICollectionView view = CollectionViewSource.GetDefaultView(dataListView.ItemsSource);
             if (string.IsNullOrEmpty(searchText))
             {
-                // Если строка поиска пустая, сбрасываем фильтрацию и отображаем все элементы
                 view.Filter = null;
             }
         }
